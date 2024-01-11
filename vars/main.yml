@@ -1,0 +1,3 @@
+---
+# vars file for rabbitmq_setup
+vault_rabbitmq_password: "{{vault_rabbit}}"

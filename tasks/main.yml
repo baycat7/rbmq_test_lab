@@ -1,0 +1,69 @@
+---
+# tasks file for rabbitmq_setup
+
+- name: Install UFW
+  apt:
+    name: ufw
+    state: present
+
+- name: Install RabbitMQ service
+  apt:
+    name: rabbitmq-server
+    state: present
+
+- name: Install RabbitMQ admin plugin
+  rabbitmq_plugin:
+    name: rabbitmq_management
+    state: enabled
+
+- name: Remove guest user
+  rabbitmq_user:
+    user: guest
+    state: absent
+
+- name: Create vhost and user with read, write privileges
+  rabbitmq_vhost:
+    name: krolik
+    state: present
+
+- name: Create RabbitMQ user with read, write privileges on vhost
+  rabbitmq_user:
+    user: krolikbox
+    password: "{{ vault_rabbitmq_password }}"
+    vhost: krolik
+    tags: "administrator"
+    configure_priv: '^$'
+    read_priv: '.*'
+    write_priv: '.*'
+
+- name: Modify RabbitMQ openfiles limit to 100K
+  lineinfile:
+    path: /etc/default/rabbitmq-server
+    regexp: '^ulimit -n'
+    line: 'ulimit -n 100000'
+
+- name: Allow SSH
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: Open RabbitMQ admin console to outside
+  ufw:
+    rule: allow
+    port: 15672
+
+- name: Open default RabbitMQ port for localhost only
+  ufw:
+    rule: allow
+    port: 5672
+    from_ip: 127.0.0.1
+
+- name: Deny Port 5672 from Any Source
+  ufw:
+    rule: deny
+    port: 5672
+
+- name: Allow everything and enable UFW
+  community.general.ufw:
+    state: enabled
+    policy: allow
