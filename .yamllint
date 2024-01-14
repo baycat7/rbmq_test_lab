@@ -1,0 +1,14 @@
+---
+extends: default
+
+rules:
+  line-length:
+    max: 180
+    level: warning
+  empty-lines:
+    max: 2
+    level: error
+
+
+ignore: |
+  .github/workflows/stale.yml
