@@ -1,6 +1,6 @@
 import pika
 
-connection_params = pika.ConnectionParameters('localhost',5672,'krolik',pass&login),
+connection_params = pika.ConnectionParameters(host='localhost',port=5672,virtual_host='krolik', credentials=pika.PlainCredentials('login','pass')),
 connection = pika.BlockingConnection(connection_params)
 channel = connection.channel()
 
@@ -16,7 +16,6 @@ sample_messages = ['max', 'bob', 'lll']
 
 for message in sample_messages:
     channel.basic_publish(exchange=exchange_name, routing_key='', body=message)
-    print(f" [x] Sent '{message}' в {exchange_name}")
+    print(f" [x] Sent '{message}' to {exchange_name}")
 
 connection.close()
-
