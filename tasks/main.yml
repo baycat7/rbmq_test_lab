@@ -6,6 +6,10 @@
     name: ufw
     state: present
 
+- name: Install required packages
+  apt:
+    name: python3-pika
+
 - name: Install RabbitMQ service
   apt:
     name: rabbitmq-server
