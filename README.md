@@ -19,15 +19,18 @@ Example Playbook
 
 ansible-playbook rabbit.yml -e @/etc/ansible/roles/rabbitmq_setup/vars/sec.yml --ask-vault-pass
 
-_____rabbit.yml_____
-
-- name: rubbit setup
-  hosts: your_host
+rabbit.yml content
+----------------
+```
+---
+- name: rabbit setup
+  hosts: your_target_host_ip_or_fqdn
   become: true
 
   roles:
-    - name: rabbitmq_setup
+    - name: rbmq_test_lab 
 
+```
 License
 -------
 
